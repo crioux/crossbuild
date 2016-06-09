@@ -49,8 +49,14 @@ RUN apt-get install -y -q                              \
 RUN apt-get install -y mingw-w64 \
  && apt-get clean
 
+RUN mkdir -p "/tmp/wclang"                                    \
+ && cd "/tmp/wclang"                                          \
+ && git clone https://github.com/tpoechtrager/wclang.git .    \
+ && cmake -DCMAKE_INSTALL_PREFIX=/usr/local .                 \
+ && make                                                      \
+ && make install
 
-# Install OSx cross-tools
+# Install OSX cross-tools
 ENV OSXCROSS_REVISION=a845375e028d29b447439b0c65dea4a9b4d2b2f6  \
     DARWIN_SDK_VERSION=10.10                                    \
     DARWIN_VERSION=14
@@ -99,7 +105,10 @@ RUN for triple in $(echo ${LINUX_TRIPLES} | tr "," " "); do                     
       done;                                                                                       \
       ln -s gcc /usr/$triple/bin/cc;                                                              \
       ln -s /usr/$triple /usr/x86_64-linux-gnu/$triple;                                           \
+      ln -s /usr/local/bin/$triple-clang /usr/$triple/bin/clang;                                 \
+      ln -s /usr/local/bin/$triple-clang++ /usr/$triple/bin/clang++;                             \
     done
+
 # we need to use default clang binary to avoid a bug in osxcross that recursively call himself
 # with more and more parameters
 
@@ -109,4 +118,3 @@ ENTRYPOINT ["/usr/bin/crossbuild"]
 CMD ["/bin/bash"]
 WORKDIR /workdir
 COPY ./assets/crossbuild /usr/bin/crossbuild
-
