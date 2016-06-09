@@ -105,8 +105,8 @@ RUN for triple in $(echo ${LINUX_TRIPLES} | tr "," " "); do                     
       done;                                                                                       \
       ln -s gcc /usr/$triple/bin/cc;                                                              \
       ln -s /usr/$triple /usr/x86_64-linux-gnu/$triple;                                           \
-      ln -s /usr/local/bin/$triple-clang /usr/$triple/bin/clang;                                 \
-      ln -s /usr/local/bin/$triple-clang++ /usr/$triple/bin/clang++;                             \
+#      ln -s /usr/local/bin/$triple-clang /usr/$triple/bin/clang;                                 \
+#      ln -s /usr/local/bin/$triple-clang++ /usr/$triple/bin/clang++;                             \
     done
 
 # we need to use default clang binary to avoid a bug in osxcross that recursively call himself
